@@ -5,6 +5,7 @@ const { Header, Sider, Content} = Layout;
 
 const App = () =>  (
         <Layout>
+            <Header></Header>
             <Content>
                 <Title level={4}>LittleCode</Title>
             </Content>
