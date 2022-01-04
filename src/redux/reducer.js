@@ -2,6 +2,10 @@ const initialState = {
     appTitle: 'LittleCode',
     appState: '',
     appSideCollapsed: false,
+    signInVisible: false,
+    userEmail: '',
+    userPassword: '',
+    signedIn: false,
 }
 
 const reducer = (state = initialState, action) => {

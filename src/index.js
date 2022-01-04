@@ -11,6 +11,7 @@ import 'react-perfect-scrollbar/dist/css/styles.css'
 import { initializeApp } from 'firebase/app'
 import { getAnalytics } from 'firebase/analytics'
 
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { getFirestore, collection, getDocs } from 'firebase/firestore/lite'
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -30,13 +31,20 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 const analytics = getAnalytics(app)
 const db = getFirestore(app)
+const test = collection(db, 'littlecode-tests')
 
-const getFirebaseTest = async () => {
-    const test = collection(db, 'littlecode-tests')
+async function fbTest() {
+    const doc = await getDocs(test)
+    let res = []
+    doc.forEach((doc) => {
+        res.push(doc.data())
+    })
+    return res
 }
 ReactDOM.render(
     <Provider store={store}>
         <App />
+        {console.log(fbTest().then((data) => console.log(data)))}
     </Provider>,
     document.getElementById('root')
 )

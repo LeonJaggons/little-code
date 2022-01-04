@@ -1,7 +1,22 @@
 import React from 'react'
-import { Avatar, Typography, Layout, Card, Row, Col, Progress, Badge, Statistic } from 'antd'
+import {
+    Avatar,
+    Typography,
+    Layout,
+    Card,
+    Row,
+    Col,
+    Button,
+    Badge,
+    Statistic,
+    Modal,
+    Input,
+} from 'antd'
 import { AiOutlineUser } from 'react-icons/ai'
 import * as Icons from 'react-icons/bi'
+import { useDispatch, useSelector } from 'react-redux'
+import { setUserLoggedIn, toggleSignInVisible } from '@/redux/actions'
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 const { Sider } = Layout
 const { Title, Text } = Typography
 
@@ -21,64 +36,67 @@ const LCSider = () => {
 }
 
 const UserDisplay = () => {
+    const dispatch = useDispatch()
+    const signInVisible = useSelector((state) => state.signInVisible)
+    const signedIn = useSelector((state) => state.signedIn)
+    const [currUser, setCurrUser] = React.useState('')
+    const [currPW, setCurrPW] = React.useState('')
+    const handleToggleSignIn = () => {
+        dispatch(toggleSignInVisible())
+    }
+
+    const handleSignIn = () => {
+        const auth = getAuth()
+        signInWithEmailAndPassword(auth, currUser, currPW)
+            .then((userCredential) => {
+                // Signed in
+                const user = userCredential.user
+                // ...
+                console.log(user)
+                dispatch(setUserLoggedIn(true))
+            })
+            .catch((error) => {
+                const errorCode = error.code
+                const errorMessage = error.message
+                console.log(errorCode, errorMessage)
+                dispatch(setUserLoggedIn(false))
+            })
+    }
+
     return (
         <>
-            <Row gutter={16} align={'middle'} style={{ marginBottom: 16 }}>
-                <Col flex={'0 1 0'}>
-                    <Badge dot showZero status={'success'}>
-                        <Avatar shape={'square'} size={64} icon={<AiOutlineUser />} />
-                    </Badge>
-                </Col>
-                <Col flex={'1 0 0'}>
-                    <Row>
-                        <Title level={3} style={{ margin: 0 }}>
-                            User Name
-                        </Title>
+            <Row style={{ marginBottom: 16 }}>
+                <Button onClick={() => handleToggleSignIn()}>Sign In</Button>
+                <Modal
+                    title={'Login'}
+                    visible={signInVisible}
+                    onCancel={() => handleToggleSignIn()}
+                    onOk={() => {
+                        handleSignIn()
+                        handleToggleSignIn()
+                    }}
+                >
+                    <Row align="middle" style={{ marginBottom: '12px' }}>
+                        <Col span={4}>Email</Col>
+                        <Col flex={'1 0 0'}>
+                            <Input value={currUser} onChange={(e) => setCurrUser(e.target.value)} />
+                        </Col>
                     </Row>
-                    <Row>
-                        <Text type={'secondary'}>
-                            Aute do enim ut in elit excepteur ea consequat culpa.
-                        </Text>
+                    <Row align={'middle'}>
+                        <Col span={4}>Password</Col>
+                        <Col flex={'1 0 0'}>
+                            <Input.Password
+                                value={currPW}
+                                onChange={(e) => setCurrPW(e.target.value)}
+                            />
+                        </Col>
                     </Row>
-                </Col>
+                </Modal>
             </Row>
-            <Row gutter={[6, 6]}>
-                <Col span={12}>
-                    <Card hoverable>
-                        <Statistic
-                            prefix={<Icons.BiHealth size={20} />}
-                            title={'Health'}
-                            value={100}
-                        />
-                    </Card>
-                </Col>
-                <Col span={12}>
-                    <Card hoverable>
-                        <Statistic
-                            prefix={<Icons.BiCoinStack size={20} />}
-                            title={'LittleCoins'}
-                            value={1900}
-                        />
-                    </Card>
-                </Col>
-                <Col span={12}>
-                    <Card hoverable>
-                        <Statistic
-                            prefix={<Icons.BiFlag size={20} />}
-                            title={'Daily Challenges'}
-                            value={0}
-                        />
-                    </Card>
-                </Col>
-                <Col span={12}>
-                    <Card hoverable>
-                        <Statistic
-                            prefix={<Icons.BiArchive size={20} />}
-                            title={'My Chest'}
-                            value={5}
-                        />
-                    </Card>
-                </Col>
+            <Row>
+                <Text type={signedIn ? 'success' : 'danger'}>
+                    {signedIn ? 'Logged in!' : 'Incorrect somthing?'}
+                </Text>
             </Row>
         </>
     )

@@ -8,6 +8,17 @@ export const setAppState = (newState) => {
     }
 }
 
+export const toggleSignInVisible = () => {
+    return (dispatch, getState) => {
+        const isVis = getState().signInVisible
+        dispatch({
+            type: 'SET_ATTR',
+            attrName: 'signInVisible',
+            payload: !isVis,
+        })
+    }
+}
+
 export const toggleAppSideCollapsed = () => {
     return (dispatch, getState) => {
         const isCollapsed = getState().appSideCollapsed
@@ -15,6 +26,16 @@ export const toggleAppSideCollapsed = () => {
             type: 'SET_ATTR',
             attrName: 'appSideCollapsed',
             payload: !isCollapsed,
+        })
+    }
+}
+
+export const setUserLoggedIn = (isLoggedIn) => {
+    return (dispatch) => {
+        dispatch({
+            type: 'SET_ATTR',
+            attrName: 'signedIn',
+            payload: isLoggedIn,
         })
     }
 }
