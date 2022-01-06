@@ -1,3 +1,5 @@
+import { getFirestore, collection, getDocs, getDoc } from 'firebase/firestore/lite'
+
 export const setAppState = (newState) => {
     return (dispatch) => {
         dispatch({
@@ -39,3 +41,39 @@ export const setUserLoggedIn = (isLoggedIn) => {
         })
     }
 }
+
+export const setUser = (newUser) => {
+    return (dispatch) => {
+        dispatch({
+            type: 'SET_ATTR',
+            attrName: 'user',
+            payload: newUser,
+        })
+    }
+}
+export const setQuestions = (newQ) => {
+    return (dispatch) => {
+        dispatch({
+            type: 'SET_ATTR',
+            attrName: 'allQuestions',
+            payload: newQ,
+        })
+    }
+}
+
+export const getAllQuestions = () => {
+    return (dispatch, getState) => {
+        const questionCollection = collection(getState().firebaseDB, 'littlecode-challenges')
+        const getDBQuestions = async () => {
+            const questionDocs = await getDocs(questionCollection)
+            const questions = []
+            questionDocs.forEach((doc) => questions.push(doc.data()))
+            return questions
+        }
+
+        getDBQuestions().then((data) => {
+            dispatch(setQuestions(data))
+        })
+    }
+}
+export const getRandomQuestion = () => {}

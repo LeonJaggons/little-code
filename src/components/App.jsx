@@ -13,24 +13,29 @@ import {
 } from 'react-icons/ai'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import LCSider from './LCSider'
+import Home from './Home.jsx'
+import LittleCode from './LittleCode'
+import News from './News'
+import Challenges from './Challenges'
 
 const { Header, Content, Sider } = Layout
 const { Title } = Typography
 
-const App = () => (
-    <Layout style={{ minHeight: '100vh' }}>
-        <AppHeader />
-        <Layout style={{ height: '100%' }}>
-            <LCSider />
-            <AppContent />
+const App = () => {
+    return (
+        <Layout style={{ minHeight: '100vh' }}>
+            <AppHeader />
+            <Layout style={{ height: '100%' }}>
+                <AppContent />
+            </Layout>
         </Layout>
-    </Layout>
-)
+    )
+}
 
 const AppHeader = () => (
     <Header style={{ padding: '0 15px', height: '68px' }}>
         <Row style={{ height: '100%' }} align="middle" justify={'space-between'}>
-            <AppTitle />
+            <LittleCode />
             <Row style={{ flex: '1 0 0', height: '100%' }} justify="center">
                 <AppMenu />
             </Row>
@@ -47,18 +52,17 @@ const AppNotifications = () => (
     </Menu>
 )
 
-const AppTitle = () => (
-    <Row align="middle">
-        <AiOutlineCode style={{ color: 'white', marginTop: 3, marginRight: 4 }} size={28} />
-        <Title level={2} style={{ margin: 0, color: 'white' }}>
-            LittleCode
-        </Title>
-    </Row>
-)
-
 const AppContent = () => (
-    <Content style={{ minHeight: '100%', padding: 25, backgroundColor: '#f5f5f5' }}>
-        <PerfectScrollbar></PerfectScrollbar>
+    <Content
+        style={{
+            minHeight: '100%',
+            padding: 20,
+            backgroundColor: '#f5f5f5',
+            display: 'flex',
+            flexFlow: 'column nowrap',
+        }}
+    >
+        <Challenges />
     </Content>
 )
 
